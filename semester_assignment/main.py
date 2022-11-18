@@ -1,44 +1,10 @@
 import time
 from simulated_annealing import *
-
+from flow_shop import *
+from cooling_strategies import *
 
 def separator():
   print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
-
-
-def print_flow_shop(machines_num, jobs_num, job_begin, job_end):
-  represent_job = []  # the job's number
-  for i in range(jobs_num):
-    represent_job.append(i + 1)
-
-  # printing the Gantt chart
-  print("FLOW-SHOP GANTT CHART:\n")
-  for i in range(machines_num):
-    for j in range(0, jobs_num):
-      if (j == 0 and job_begin[i][j] != 0):
-        print((job_begin[i][j]) * "-|", end="")
-      if (j < jobs_num - 1):
-        print((job_end[i][j] - job_begin[i][j]) * f"{represent_job[j]}|", end="")
-        print((job_begin[i][j + 1] - job_end[i][j]) * "-|", end="")
-      if (j == jobs_num - 1):
-        print((job_end[i][j] - job_begin[i][j]) * f"{represent_job[j]}|", end="")
-    print("\n")
-
-
-def jobs_input(jobs_num, machines_num):
-  jobs = [[0 for i in range(machines_num)] for y in range(
-    jobs_num)]  # it's a two-dimensional array where an array stores a random generated number which is the job's length
-  for i in range(jobs_num):
-    for j in range(machines_num):
-      jobs[i][j] = (random.randint(1, 8))
-  # jobs = [
-  #   [3, 4, 6, 7],
-  #   [4, 5, 4, 6],
-  #   [8, 7, 2, 2],
-  #   [5, 3, 1, 5],
-  #   [7, 6, 8, 4]
-  # ]
-  return jobs
 
 
 def calculate_deadlines(machines_num, c_max, jobs_num, jobs, job_end):
@@ -61,7 +27,6 @@ def calculate_deadlines(machines_num, c_max, jobs_num, jobs, job_end):
 
 
 def print_deadlines_table(end_times, jobs, jobs_l, jobs_t, deadlines):
-  separator()
   print("DEADLINE TABLE:\n")
 
   print("{:>}\t\t{:>4}\t\t{:>4}\t\t{:>4}\t\t{:>4}".format("Ji", "Ci", "di", "Li", "Ti"))
@@ -73,8 +38,6 @@ def print_deadlines_table(end_times, jobs, jobs_l, jobs_t, deadlines):
 
   print("------------------------------------------------")
   print("{:>}\t\t\t\t\t\t\t\t{:>4}\t\t{:>4}".format("SUM", sum(jobs_l), sum(jobs_t)))
-  separator()
-
 
 
 def main():
@@ -105,7 +68,11 @@ def main():
 
   print_flow_shop(machines_num, jobs_num, result["job_begin"], result["job_end"])
 
+  separator()
+
   print_deadlines_table(deadlines["end_times"], jobs, deadlines["jobs_l"], deadlines["jobs_t"], deadlines["deadlines"])
+
+  separator()
 
   print(f"Initial order: {init_order}")
   print(f"Best order: {order}\n")

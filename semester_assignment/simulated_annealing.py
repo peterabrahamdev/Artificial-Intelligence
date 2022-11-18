@@ -1,26 +1,10 @@
-import random
 from cooling_strategies import *
+from flow_shop import *
+
 
 def probability(t_star, f_st, temp):
   expon = (t_star - f_st) / temp
   return math.exp(-expon)
-
-
-def object_function(jobs, order, jobs_num, machines_num):
-  job_begin = [[0 for x in range(jobs_num)] for y in range(machines_num)]  # stores the starting points of the jobs
-  job_end = [[0 for x in range(jobs_num)] for y in range(machines_num)]  # stores the end points of the jobs
-  cost = [0 for i in range(jobs_num)]  #
-  for i in range(0, machines_num):
-    for j in range(0, jobs_num):
-      c_max = cost[j]
-      if j > 0:
-        c_max = max(cost[j - 1], cost[j])
-      cost[j] = c_max + jobs[order[j] - 1][i]
-      job_end[i][j] = cost[j]
-      job_begin[i][j] = job_end[i][j] - jobs[order[j] - 1][i]
-      c_max = job_end[i][j]
-
-  return {"c_max": c_max, "job_begin": job_begin, "job_end": job_end}
 
 
 def simulated_annealing(jobs, s, object_f, iterations, neighbors, t0, jobs_num, machines_num, cooling_strategy):

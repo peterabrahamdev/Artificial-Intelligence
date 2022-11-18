@@ -1,5 +1,6 @@
 import math
 
+
 def temp_lin_mult(t0, alpha, t):
   return t0 / (1 + (alpha * t))
 
@@ -18,6 +19,7 @@ def temp_log_mult(t0, alpha, t):
 
 def temp_non_monotonic(f_star, f_si, t0, alpha, t):
   return (1 + ((f_si - f_star) / f_si)) * temp_lin_mult(t0, alpha, t)
+
 
 def choose_cooling_strategy(cooling_strategy, f_star, f_si, t0, alpha, t):
   if (cooling_strategy == 1):
