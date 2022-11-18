@@ -7,10 +7,6 @@ def separator():
   print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
 
 
-def inprint_separator():
-  return "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
-
-
 def print_flow_shop(machines_num, jobs_num, job_begin, job_end):
   represent_job = []  # the job's number
   for i in range(jobs_num):
@@ -132,13 +128,13 @@ def cooling_stategy_name(cooling_strategy):
 
 
 def simulated_annealing(jobs, s, object_f, iterations, neighbors, t0, jobs_num, machines_num, cooling_strategy):
-  s_best = list(s)  # stores the best order of jobs
-  f_best = object_f(jobs, s_best, jobs_num, machines_num)['c_max']  # stores the best Cmax
-  s_base = list(s_best)
-  f_base = f_best
-  t = 0  # represents time
-  alpha = 0.8  # alpha (should be between 0.8 - 0.9)
   try:
+    s_best = list(s)  # stores the best order of jobs
+    f_best = object_f(jobs, s_best, jobs_num, machines_num)['c_max']  # stores the best Cmax
+    s_base = list(s_best)
+    f_base = f_best
+    t = 0  # represents time
+    alpha = 0.8  # alpha (should be between 0.8 - 0.9)
     for i in range(iterations):
       s_best_neighbor = list(s_base)
       f_best_neighbor = f_base
@@ -162,17 +158,13 @@ def simulated_annealing(jobs, s, object_f, iterations, neighbors, t0, jobs_num, 
             f_best_neighbor = f_neighbor
             s_best_neighbor = s_neighbor
         # -- END SIMULATED ANNEALING --
+      s_base = s_best_neighbor
+      f_base = f_best_neighbor
+      if f_base < f_best:
+        f_best = f_base
+        s_best = s_base
   except(OverflowError):
     print(f"\n!!! Overflow Error - Exited at: {t}/{iterations * neighbors} !!!")
-  s_base = s_best_neighbor
-  f_base = f_best_neighbor
-  if f_base < f_best:
-    f_best = f_base
-    s_best = s_base
-  separator()
-  print(f"Best order: {s_best}")
-  separator()
-
   return s_best
 
 
@@ -189,7 +181,6 @@ def main():
 
   # ARRANGING INPUTS
   init_order = list(range(1, jobs_num + 1))
-  st = time.time()
   random.shuffle(init_order)
 
   # INITIALIZATION
@@ -201,12 +192,16 @@ def main():
   deadlines = calculate_deadlines(machines_num, result["c_max"], jobs_num, jobs, result["job_end"])
 
   # PRINTING OUT THE RESULTS
+  separator()
 
   print_flow_shop(machines_num, jobs_num, result["job_begin"], result["job_end"])
 
   print_deadlines_table(deadlines["end_times"], jobs, deadlines["jobs_l"], deadlines["jobs_t"], deadlines["deadlines"])
 
-  print(f"C-max: {result['c_max']}")
+  print(f"Initial order: {init_order}")
+  print(f"Best order: {order}\n")
+
+  print(f"C-max: {result['c_max']}\n")
 
   print(f"Runtime with {cooling_stategy_name(cooling_strategy)}: {round(time.time() - start_time, 4)} sec")
 
