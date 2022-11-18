@@ -1,6 +1,6 @@
 import random
-import math
 import time
+from cooling_strategies import *
 
 
 def separator():
@@ -98,26 +98,6 @@ def print_deadlines_table(end_times, jobs, jobs_l, jobs_t, deadlines):
   separator()
 
 
-def temp_lin_mult(t0, alpha, t):
-  return t0 / (1 + (alpha * t))
-
-
-def temp_lin_mult2(t0, alpha, t):
-  return t0 / (1 + alpha * (t ** 2))
-
-
-def temp_exp_mult(t0, alpha, t):
-  return t0 * (alpha ** t)
-
-
-def temp_log_mult(t0, alpha, t):
-  return t0 / (1 + alpha * math.log(1) + t)
-
-
-def temp_non_monotonic(f_star, f_si, t0, alpha, t):
-  return (1 + ((f_si - f_star) / f_si)) * temp_lin_mult(t0, alpha, t)
-
-
 def probability(t_star, f_st, temp):
   expon = (t_star - f_st) / temp
   return math.exp(-expon)
@@ -209,18 +189,19 @@ def main():
 
   # ARRANGING INPUTS
   init_order = list(range(1, jobs_num + 1))
+  st = time.time()
   random.shuffle(init_order)
-  print(f"Initial order: {init_order}")
 
   # INITIALIZATION
   start_time = time.time()
   jobs = jobs_input(jobs_num, machines_num)
-  result = object_function(jobs,
-                           simulated_annealing(jobs, init_order, object_function, iteration_num, 100, init_temperature,
-                                               jobs_num, machines_num, cooling_strategy), jobs_num, machines_num)
+  order = simulated_annealing(jobs, init_order, object_function, iteration_num, 100, init_temperature, jobs_num,
+                              machines_num, cooling_strategy)
+  result = object_function(jobs, order, jobs_num, machines_num)
   deadlines = calculate_deadlines(machines_num, result["c_max"], jobs_num, jobs, result["job_end"])
 
   # PRINTING OUT THE RESULTS
+
   print_flow_shop(machines_num, jobs_num, result["job_begin"], result["job_end"])
 
   print_deadlines_table(deadlines["end_times"], jobs, deadlines["jobs_l"], deadlines["jobs_t"], deadlines["deadlines"])
