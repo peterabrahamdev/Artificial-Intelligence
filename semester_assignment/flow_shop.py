@@ -1,4 +1,5 @@
 import random
+from deadlines import *
 
 
 def jobs_input(jobs_num, machines_num):
@@ -17,7 +18,7 @@ def jobs_input(jobs_num, machines_num):
   return jobs
 
 
-def object_function(jobs, order, jobs_num, machines_num):
+def object_function(jobs, order, jobs_num, machines_num, deadlines):
   job_begin = [[0 for x in range(jobs_num)] for y in range(machines_num)]  # stores the starting points of the jobs
   job_end = [[0 for x in range(jobs_num)] for y in range(machines_num)]  # stores the end points of the jobs
   cost = [0 for i in range(jobs_num)]  #
@@ -31,7 +32,26 @@ def object_function(jobs, order, jobs_num, machines_num):
       job_begin[i][j] = job_end[i][j] - jobs[order[j] - 1][i]
       c_max = job_end[i][j]
 
-  return {"c_max": c_max, "job_begin": job_begin, "job_end": job_end}
+  t_sum = calculate_deadlines(jobs, job_end, deadlines)["t_sum"]
+
+  return {"c_max": c_max, "t_sum": t_sum, "job_begin": job_begin, "job_end": job_end}
+
+
+def deadline_length(jobs, order, jobs_num, machines_num):
+  job_begin = [[0 for x in range(jobs_num)] for y in range(machines_num)]  # stores the starting points of the jobs
+  job_end = [[0 for x in range(jobs_num)] for y in range(machines_num)]  # stores the end points of the jobs
+  cost = [0 for i in range(jobs_num)]  #
+  for i in range(0, machines_num):
+    for j in range(0, jobs_num):
+      c_max = cost[j]
+      if j > 0:
+        c_max = max(cost[j - 1], cost[j])
+      cost[j] = c_max + jobs[order[j] - 1][i]
+      job_end[i][j] = cost[j]
+      job_begin[i][j] = job_end[i][j] - jobs[order[j] - 1][i]
+      c_max = job_end[i][j]
+
+  return c_max
 
 
 def print_flow_shop(machines_num, jobs_num, job_begin, job_end):
