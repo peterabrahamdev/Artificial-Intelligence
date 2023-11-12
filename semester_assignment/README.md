@@ -38,7 +38,7 @@ Flow-shop scheduling with deadlines using the Simulated Annealing algorithm.
     
 # 🤖 Proyecto de Inteligencia Artificial
 ## Descripción de la tarea
-Programación de Flow-Shop con plazos utilizando el algoritmo de Recocido Simulado.
+Programación de Flow-Shop con plazos utilizando el algoritmo de Enfriamiento Simulado.
 
 ## Pasos de la solución
 1. El programa requiere la entrada de los siguientes datos del usuario:
@@ -53,7 +53,7 @@ Programación de Flow-Shop con plazos utilizando el algoritmo de Recocido Simula
      ![alt text](https://github.com/APeterIstvan/Artificial-Intelligence/blob/main/images/input.png?raw=true)
     
 2. Basado en los datos propocionados, el programa genera aleatoriamente el número apropiado de los trabajos, sus longitudes y plazos, y también proporciona un orden inicial.
-3. En el próximo paso comienza el algoritmo de recocido simulado y va a reducir la probabilidad de aceptar las opciones peores con la estrategia de enfriamiento especificada.
+3. En el próximo paso comienza el algoritmo de enfriamiento simulado y va a reducir la probabilidad de aceptar las opciones peores con la estrategia de enfriamiento especificada.
 4. Después de que el programa haya determinado el mejor resultado, escribe lo siguiente en la consola:
      - Diagrama de Flow-Shop para el Cmax y el ΣTi
      - Tabla de plazos para el Cmax y el ΣTi
